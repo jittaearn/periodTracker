@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "59569916941",
+    "project_id": "teamnote-6110545449-89e8e",
+    "storage_bucket": "teamnote-6110545449-89e8e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:59569916941:android:06671afb488d8cd34d5944",
+        "android_client_info": {
+          "package_name": "com.teamnoteproject"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "59569916941-npon5nl9tqcvnt7h9h7liq5lndn8m4aq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA6aunFWaLP19w_lBeLhqo29Yrfg1nec0A"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "59569916941-npon5nl9tqcvnt7h9h7liq5lndn8m4aq.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
