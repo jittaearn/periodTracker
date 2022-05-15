@@ -1,7 +1,8 @@
-import React, { useState } from "react";
-import { CheckBox, Text, StyleSheet, View } from "react-native";
+import React, {useState} from 'react';
+import {Text, StyleSheet, View} from 'react-native';
+import CheckBox from 'react-native-check-box';
 
-const CheckBox = () => {
+const CustomCheckBox = () => {
   const [isSelected, setSelection] = useState(false);
 
   return (
@@ -12,9 +13,9 @@ const CheckBox = () => {
           onValueChange={setSelection}
           style={styles.checkbox}
         />
-        <Text style={styles.label}>Do you like React Native?</Text>
+        <Text style={styles.label}>First day of you period?</Text>
       </View>
-      <Text>Is CheckBox selected: {isSelected ? "👍" : "👎"}</Text>
+      <Text>Is CheckBox selected: {isSelected ? '👍' : '👎'}</Text>
     </View>
   );
 };
@@ -22,15 +23,15 @@ const CheckBox = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   checkboxContainer: {
-    flexDirection: "row",
+    flexDirection: 'row',
     marginBottom: 20,
   },
   checkbox: {
-    alignSelf: "center",
+    alignSelf: 'center',
   },
   label: {
     margin: 8,

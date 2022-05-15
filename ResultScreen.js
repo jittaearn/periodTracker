@@ -15,12 +15,12 @@ const ResultScreen = ({navigation, route}) => {
   };
 
   return (
-    <ScrollView style={styles.scrollView}>
-      <View style={styles.container}>
-        <Text style={styles.title}>Period Tracker</Text>
-        <NoteList onAddData={onAddData} onCalendar={onCalendar} />
-      </View>
-    </ScrollView>
+    // <ScrollView style={styles.scrollView}>
+    <View style={styles.container}>
+      <Text style={styles.title}>Period Tracker</Text>
+      <NoteList onAddData={onAddData} onCalendar={onCalendar} />
+    </View>
+    // {/* </ScrollView> */}
   );
 };
 
@@ -31,7 +31,9 @@ const styles = StyleSheet.create({
     paddingBottom: 500,
   },
   container: {
-    paddingBottom: 100,
+    backgroundColor: 'pink',
+    padding: 15,
+    paddingBottom: 330,
   },
   title: {
     width: '100%',

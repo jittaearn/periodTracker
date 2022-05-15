@@ -8,7 +8,7 @@ import {
   TextInput,
   TouchableOpacity,
 } from 'react-native';
-import CheckBox from 'react-native-check-box';
+import CustomCheckBox from './CustomCheckBox';
 
 import firestore from '@react-native-firebase/firestore';
 import {StackActions} from '@react-navigation/native';
@@ -54,25 +54,18 @@ const AddData = props => {
   ];
 
   const onPress = mood => {
-    // eslint-disable-next-line no-sequences
-    setSelectedMood(mood), console.log(selectedMood);
+    setSelectedMood(mood);
   };
 
   return (
     <View style={styles.container}>
       <View style={styles.viewHorizontal}>
-        <Text style={styles.title}>Hello, {props.user}</Text>
+        <Text style={styles.title}>Hello, {props.user}!</Text>
         <Button title="Sign out" onPress={props.onSignOut} color="#B25B6E" />
       </View>
       <View style={styles.checkboxContainer}>
-        <CheckBox
-          value={isSelected}
-          onValueChange={setSelection}
-          style={styles.checkbox}
-        />
-        <Text style={styles.label}>Do you like React Native?</Text>
+        <CustomCheckBox />
       </View>
-      <Text>Is CheckBox selected: {isSelected ? '👍' : '👎'}</Text>
       <Text style={styles.label}>Mood</Text>
       <View style={styles.viewMoods}>
         {moods.map(mood => (

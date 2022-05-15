@@ -4,13 +4,11 @@ import {
   View,
   FlatList,
   Text,
-  // Alert,
   Button,
   ActivityIndicator,
 } from 'react-native';
 
 import firestore from '@react-native-firebase/firestore';
-// import {StackActions} from '@react-navigation/native';
 import moment from 'moment';
 
 const NoteList = props => {
@@ -153,9 +151,6 @@ const styles = StyleSheet.create({
     fontWeight: '400',
     fontSize: 14,
     padding: 5,
-    display: 'flex',
-    textAlign: 'left',
-    marginRight: 'auto',
   },
 });
 
