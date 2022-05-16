@@ -1,7 +1,7 @@
 import React from 'react';
 import {StyleSheet, Text, ScrollView} from 'react-native';
 
-import AddData from './components/AddData';
+import AddData from '../components/AddData';
 
 const MainScreen = ({navigation, route}) => {
   let user = route.params.user;
@@ -21,10 +21,12 @@ const MainScreen = ({navigation, route}) => {
 const styles = StyleSheet.create({
   scrollView: {
     backgroundColor: 'pink',
+    padding: 15,
   },
   title: {
     width: '100%',
     margin: 10,
+    marginTop: 20,
     fontSize: 24,
     fontWeight: 'bold',
     color: '#7D3042',

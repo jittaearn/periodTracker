@@ -28,12 +28,13 @@ const MyCalendar = props => {
   const [markedDates, setMarkedDate] = useState({});
   const [DateInside, setDateInside] = useState([]);
 
-  function createMarkdate(datas) {
+  function createMarkdate(notes) {
     const markdate = {};
     const dateInside = [];
 
-    datas.forEach(data => {
-      let date = new Date(data.date.seconds * 1000);
+    notes.forEach(note => {
+      let date = new Date(note.date.seconds * 1000);
+      console.log('note', note.date);
       console.log(date.getDate());
       let day;
       let month;
@@ -51,22 +52,23 @@ const MyCalendar = props => {
 
       markdate[`${date.getFullYear()}-${month}-${day}`] = {
         selected: true,
-        selectedColor: data.color,
-        key: data.key,
+        selectedColor: 'pink',
+        key: notes.date,
       };
       dateInside.push(`${date.getFullYear()}-${month}-${day}`);
     });
+
+    console.log('markdate', markdate);
 
     setMarkedDate(markdate);
     setDateInside(dateInside);
   }
 
-  //   useEffect(() => {
-  //     if (props.data) {
-  //       console.log(DateInside);
-  //       createMarkdate(props.data);
-  //     }
-  //   }, [props.data]);
+  useEffect(() => {
+    if (props.notes) {
+      createMarkdate(props.notes);
+    }
+  }, [props.notes]);
 
   return (
     <Calendar
@@ -83,7 +85,7 @@ const MyCalendar = props => {
         textDisabledColor: '#d9e1e8',
         dotColor: '#00adf5',
         selectedDotColor: '#ffffff',
-        arrowColor: color.black,
+        arrowColor: '#B25B6E',
         disabledArrowColor: '#d9e1e8',
         monthTextColor: 'blue',
         indicatorColor: 'blue',

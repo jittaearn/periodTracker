@@ -7,34 +7,39 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
+  Image,
 } from 'react-native';
-import CustomCheckBox from './CustomCheckBox';
 
 import firestore from '@react-native-firebase/firestore';
 import {StackActions} from '@react-navigation/native';
 
 const AddData = props => {
   const [isSelected, setSelection] = useState(false);
-  // eslint-disable-next-line no-unused-vars
-  const [status, setStatus] = useState('');
-  // eslint-disable-next-line no-unused-vars
+  const [isFirstDate, setFirstDate] = useState(false);
+  const [isLastDate, setLastDate] = useState(false);
+  const [hasPeriod, setHasPeriod] = useState(false);
   const [note, setNote] = useState('');
   const [selectedMood, setSelectedMood] = useState('');
+  const [question, setQuestion] = useState('First day of your period?');
 
   const addNote = () => {
     firestore()
       .collection('periodTracker')
       .add({
         user: props.user,
-        status: status,
+        isFirstDate: isFirstDate,
+        isLastDate: isLastDate,
         mood: selectedMood,
-        date: Date(),
+        note: note,
+        date: new Date(),
+        day: 'Last day of period',
+        date1: 'Mon May 16',
       })
       .then(() => {
         Alert.alert('Note Added!!');
         const popAction = StackActions.pop(1);
         props.navigation.dispatch(popAction);
-        props.navigation.navigate('Result');
+        props.navigation.navigate('Result', {user: props.user});
       });
   };
 
@@ -57,14 +62,58 @@ const AddData = props => {
     setSelectedMood(mood);
   };
 
+  const getHasPeriod = () => {
+    firestore()
+      .collection('user')
+      .where('username', '==', props.user)
+      .onSnapshot(querySnapshot => {
+        querySnapshot.forEach(documentSnapshot => {
+          setHasPeriod(documentSnapshot.get('hasPeriod'));
+        });
+      });
+  };
+
+  const updateHasPeriod = state => {
+    firestore()
+      .collection('user')
+      .where('username', '==', props.user)
+      .update({
+        hasPeriod: state,
+      })
+      .then(() => {
+        console.log('User updated!');
+      });
+  };
+
+  // const checkCheckBox = () => {
+  //   if (isSelected && hasPeriod == false) {
+  //     updateHasPeriod(true);
+  //   } else if (isSelected && hasPeriod == true) {
+  //     updateHasPeriod(false);
+  //   }
+  // };
+
+  if (hasPeriod == true) {
+    setQuestion('First day of your period?');
+  }
+
   return (
     <View style={styles.container}>
       <View style={styles.viewHorizontal}>
-        <Text style={styles.title}>Hello, {props.user}!</Text>
+        <Text style={styles.title}>Hello, {props.user}</Text>
         <Button title="Sign out" onPress={props.onSignOut} color="#B25B6E" />
       </View>
       <View style={styles.checkboxContainer}>
-        <CustomCheckBox />
+        <TouchableOpacity
+          style={!isSelected ? styles.uncheckBox : styles.checkedBox}
+          onPress={() => {
+            setSelection(!isSelected);
+          }}>
+          <View style={styles.checkbox}>
+            <Image source={require('../assets/tick.png')} style={styles.tick} />
+          </View>
+        </TouchableOpacity>
+        <Text style={styles.label}>{question}</Text>
       </View>
       <Text style={styles.label}>Mood</Text>
       <View style={styles.viewMoods}>
@@ -83,7 +132,15 @@ const AddData = props => {
         numberOfLines={4}
         onChangeText={value => setNote(value)}
       />
-      <Button title="Submit" onPress={() => addNote()} color="#B25B6E" />
+      <Button
+        title="Submit"
+        onPress={() => {
+          getHasPeriod();
+          // checkCheckBox();
+          addNote();
+        }}
+        color="#B25B6E"
+      />
     </View>
   );
 };
@@ -101,6 +158,7 @@ const styles = StyleSheet.create({
     borderWidth: 20,
     borderRadius: 5,
     borderColor: 'white',
+    marginBottom: 80,
   },
   title: {
     width: '100%',
@@ -112,14 +170,36 @@ const styles = StyleSheet.create({
   },
   checkboxContainer: {
     flexDirection: 'row',
-    marginBottom: 20,
+    justifyContent: 'flex-start',
+    alignItems: 'center',
     marginRight: 'auto',
   },
-  checkbox: {
+  uncheckBox: {
     alignSelf: 'center',
     borderRadius: 5,
+    borderWidth: 2,
+    borderColor: '#EDA1AD',
     width: 20,
     height: 20,
+  },
+  checkedBox: {
+    alignSelf: 'center',
+    borderRadius: 5,
+    borderWidth: 2,
+    borderColor: '#EDA1AD',
+    width: 20,
+    height: 20,
+    backgroundColor: 'pink',
+  },
+  tick: {
+    width: 10,
+    height: 10,
+    justifyContent: 'center',
+    alignContent: 'center',
+    alignItems: 'center',
+    display: 'flex',
+    marginTop: 3,
+    marginLeft: 3,
   },
   label: {
     margin: 8,
@@ -132,7 +212,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     padding: 10,
-    gap: 30,
   },
   viewMoods: {
     flexDirection: 'row',

@@ -14,24 +14,30 @@ import moment from 'moment';
 const NoteList = props => {
   const [loading, setLoading] = useState(true);
   const [notes, setNotes] = useState([]);
+  const [isFirstDate, setFirstDate] = useState(false);
+  const [isLastDate, setLastDate] = useState(false);
+  const [status, setStatus] = useState('');
+  const [timeStamp, setTimeStamp] = useState(new Date());
 
   useEffect(() => {
     const subscriber = firestore()
       .collection('periodTracker')
       .onSnapshot(querySnapshot => {
-        const team_notes = [];
+        const period_tracker = [];
 
         querySnapshot.forEach(documentSnapshot => {
-          team_notes.push({
+          period_tracker.push({
             key: documentSnapshot.id,
-            date: moment(documentSnapshot.get('date')).format('ddd MMM DD'),
+            date: documentSnapshot.get('date'),
             mood: documentSnapshot.get('mood'),
-            status: documentSnapshot.get('status'),
+            isFirstDate: documentSnapshot.get('isFirstDate'),
+            isLastDate: documentSnapshot.get('isLastDate'),
             note: documentSnapshot.get('note'),
           });
+          setFirstDate(documentSnapshot.get('isFirstDate'));
+          setLastDate(documentSnapshot.get('isLastDate'));
         });
-
-        setNotes(team_notes);
+        setNotes(period_tracker);
         setLoading(false);
       });
     return () => subscriber();
@@ -41,16 +47,18 @@ const NoteList = props => {
     return <ActivityIndicator />;
   }
 
-  const checkDate = status => {
-    const day = 2;
-    if (status === 'FIRST_DATE') {
-      return 'First day of Period';
-    } else if (status === 'ON_PERIOD') {
-      return `DAY ${day}`;
-    } else if (status === 'LAST_DATE') {
-      return 'Last day of Period';
-    }
-  };
+  // const day = Math.floor(
+  //   Math.abs(period_tracker.date - timeStamp) / (1000 * 60 * 60 * 24),
+  // );
+
+  // if (isFirstDate == true && isLastDate == false) {
+  //   setStatus('First day of Period');
+  //   setTimeStamp(documentSnapshot.get('date'));
+  // } else if (isFirstDate == false && isLastDate == false) {
+  //   setStatus(`DAY ${day}`);
+  // } else if (isFirstDate == false && isLastDate == true) {
+  //   setStatus('Last day of Period');
+  // }
 
   return (
     <View style={styles.container}>
@@ -61,8 +69,10 @@ const NoteList = props => {
           <View style={styles.listItem}>
             <View style={styles.viewHorizontalNote}>
               <Text style={styles.mood}>{item.mood}</Text>
-              <Text style={styles.status}>{checkDate(item.status)}</Text>
-              <Text style={styles.date}>{item.date}</Text>
+              <Text style={styles.status}>{item.day}</Text>
+              <Text style={styles.date}>
+                {moment(item.date).format('ddd MMM DD')}
+              </Text>
             </View>
             <Text style={styles.note}>{item.note}</Text>
           </View>

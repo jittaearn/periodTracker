@@ -2,10 +2,10 @@ import React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
-import LogInScreen from './LogInScreen';
-import MainScreen from './MainScreen';
-import ResultScreen from './ResultScreen';
-import CalendarScreen from './CalendarScreen';
+import LogInScreen from './pages/LogInScreen';
+import MainScreen from './pages/MainScreen';
+import ResultScreen from './pages/ResultScreen';
+import CalendarScreen from './pages/CalendarScreen';
 
 const Stack = createNativeStackNavigator();
 

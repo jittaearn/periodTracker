@@ -1,39 +1,33 @@
 import React from 'react';
-import {StyleSheet, View, Text, ScrollView} from 'react-native';
+import {StyleSheet, View, Text} from 'react-native';
 
-import NoteList from './components/NoteList';
+import NoteList from '../components/NoteList';
 
 const ResultScreen = ({navigation, route}) => {
-  // let username = route.params.user;
+  let username = route.params.user;
 
   const onAddData = () => {
-    navigation.navigate('Main');
+    navigation.navigate('Main', {user: username});
   };
 
   const onCalendar = () => {
-    navigation.navigate('Calendar');
+    navigation.navigate('Calendar', {user: username});
   };
 
   return (
-    // <ScrollView style={styles.scrollView}>
     <View style={styles.container}>
       <Text style={styles.title}>Period Tracker</Text>
       <NoteList onAddData={onAddData} onCalendar={onCalendar} />
     </View>
-    // {/* </ScrollView> */}
   );
 };
 
 const styles = StyleSheet.create({
-  scrollView: {
-    backgroundColor: 'pink',
-    padding: 15,
-    paddingBottom: 500,
-  },
   container: {
     backgroundColor: 'pink',
     padding: 15,
-    paddingBottom: 330,
+    paddingBottom: 180,
+    height: '100%',
   },
   title: {
     width: '100%',
