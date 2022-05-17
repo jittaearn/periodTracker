@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   Alert,
   Button,
@@ -22,6 +22,17 @@ const AddData = props => {
   const [selectedMood, setSelectedMood] = useState('');
   const [question, setQuestion] = useState('First day of your period?');
 
+  useEffect(() => {
+    getHasPeriod();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    if (hasPeriod == true) {
+      setQuestion('Last day of your period?');
+    }
+  }, [hasPeriod]);
+
   const addNote = () => {
     firestore()
       .collection('periodTracker')
@@ -32,8 +43,6 @@ const AddData = props => {
         mood: selectedMood,
         note: note,
         date: new Date(),
-        day: 'Last day of period',
-        date1: 'Mon May 16',
       })
       .then(() => {
         Alert.alert('Note Added!!');
@@ -69,6 +78,7 @@ const AddData = props => {
       .onSnapshot(querySnapshot => {
         querySnapshot.forEach(documentSnapshot => {
           setHasPeriod(documentSnapshot.get('hasPeriod'));
+          console.log(documentSnapshot.get('hasPeriod'));
         });
       });
   };
@@ -77,25 +87,26 @@ const AddData = props => {
     firestore()
       .collection('user')
       .where('username', '==', props.user)
-      .update({
-        hasPeriod: state,
+      .get()
+      .then(querySnapshot => {
+        querySnapshot.docs[0].ref.update({
+          hasPeriod: state,
+        });
       })
       .then(() => {
         console.log('User updated!');
       });
   };
 
-  // const checkCheckBox = () => {
-  //   if (isSelected && hasPeriod == false) {
-  //     updateHasPeriod(true);
-  //   } else if (isSelected && hasPeriod == true) {
-  //     updateHasPeriod(false);
-  //   }
-  // };
-
-  if (hasPeriod == true) {
-    setQuestion('First day of your period?');
-  }
+  const checkCheckBox = () => {
+    if (isSelected && hasPeriod == false) {
+      // setFirstDate(true);
+      updateHasPeriod(true);
+    } else if (isSelected && hasPeriod == true) {
+      // setLastDate(true);
+      updateHasPeriod(false);
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -136,7 +147,7 @@ const AddData = props => {
         title="Submit"
         onPress={() => {
           getHasPeriod();
-          // checkCheckBox();
+          checkCheckBox();
           addNote();
         }}
         color="#B25B6E"

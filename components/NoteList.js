@@ -1,12 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {
-  StyleSheet,
-  View,
-  FlatList,
-  Text,
-  Button,
-  ActivityIndicator,
-} from 'react-native';
+import {StyleSheet, View, FlatList, Text, Button} from 'react-native';
 
 import firestore from '@react-native-firebase/firestore';
 import moment from 'moment';
@@ -17,23 +10,27 @@ const NoteList = props => {
   const [isFirstDate, setFirstDate] = useState(false);
   const [isLastDate, setLastDate] = useState(false);
   const [status, setStatus] = useState('');
-  const [timeStamp, setTimeStamp] = useState(new Date());
+  const [timeStamp, setTimeStamp] = useState(new Date(1652344499));
+  const [date, setDate] = useState();
 
   useEffect(() => {
     const subscriber = firestore()
       .collection('periodTracker')
+      .orderBy('date', 'asc')
       .onSnapshot(querySnapshot => {
         const period_tracker = [];
 
         querySnapshot.forEach(documentSnapshot => {
           period_tracker.push({
             key: documentSnapshot.id,
-            date: documentSnapshot.get('date'),
+            date: new Date(documentSnapshot.get('date').seconds * 1000),
             mood: documentSnapshot.get('mood'),
             isFirstDate: documentSnapshot.get('isFirstDate'),
             isLastDate: documentSnapshot.get('isLastDate'),
             note: documentSnapshot.get('note'),
+            day: new Date(documentSnapshot.get('date').seconds * 1000),
           });
+          setDate(documentSnapshot.get('date'));
           setFirstDate(documentSnapshot.get('isFirstDate'));
           setLastDate(documentSnapshot.get('isLastDate'));
         });
@@ -41,24 +38,26 @@ const NoteList = props => {
         setLoading(false);
       });
     return () => subscriber();
-  });
+  }, []);
 
-  if (loading) {
-    return <ActivityIndicator />;
-  }
+  console.log(date);
 
-  // const day = Math.floor(
-  //   Math.abs(period_tracker.date - timeStamp) / (1000 * 60 * 60 * 24),
-  // );
+  useEffect(() => {
+    const day = Math.floor(Math.abs(date - timeStamp) / (1000 * 60 * 60 * 24));
 
-  // if (isFirstDate == true && isLastDate == false) {
-  //   setStatus('First day of Period');
-  //   setTimeStamp(documentSnapshot.get('date'));
-  // } else if (isFirstDate == false && isLastDate == false) {
-  //   setStatus(`DAY ${day}`);
-  // } else if (isFirstDate == false && isLastDate == true) {
-  //   setStatus('Last day of Period');
-  // }
+    if (isFirstDate == true && isLastDate == false) {
+      setStatus('First day of Period');
+    } else if (isFirstDate == false && isLastDate == false) {
+      setStatus(`DAY ${day}`);
+    } else if (isFirstDate == false && isLastDate == true) {
+      setStatus('Last day of Period');
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isFirstDate, isLastDate]);
+
+  useEffect(() => {
+    console.log('Notelist', notes);
+  }, [notes]);
 
   return (
     <View style={styles.container}>
@@ -69,9 +68,12 @@ const NoteList = props => {
           <View style={styles.listItem}>
             <View style={styles.viewHorizontalNote}>
               <Text style={styles.mood}>{item.mood}</Text>
-              <Text style={styles.status}>{item.day}</Text>
+              <Text style={styles.status}>
+                DAY {Math.abs(item.day.getDay() - 11)}
+              </Text>
               <Text style={styles.date}>
                 {moment(item.date).format('ddd MMM DD')}
+                {/* {item.date.getDate()} */}
               </Text>
             </View>
             <Text style={styles.note}>{item.note}</Text>

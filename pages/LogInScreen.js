@@ -24,12 +24,11 @@ const LogInScreen = ({navigation}) => {
             documentSnapshot.get('username') == username &&
             documentSnapshot.get('password') == password
           ) {
-            doLogIn(documentSnapshot.get('username'));
+            doLogIn();
           } else {
             Alert.alert('Failed to Log-In!');
           }
         });
-
         setUsers(user);
         setLoading(false);
       });

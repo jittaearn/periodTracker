@@ -34,7 +34,7 @@ const CalendarScreen = ({navigation, route}) => {
         setLoading(false);
       });
     return () => subscriber();
-  });
+  }, []);
 
   // useEffect(() => {
   //   if (user) {
